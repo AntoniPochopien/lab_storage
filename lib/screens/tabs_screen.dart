@@ -5,8 +5,6 @@ import './second_screen.dart';
 import './settings_screen.dart';
 
 class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key});
-
   @override
   State<TabsScreen> createState() => _TabsScreenState();
 }

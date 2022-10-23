@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab_storage/local_storage/users_files_logic.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/users_provider.dart';
 
 class addReagentDialog extends StatefulWidget {
   const addReagentDialog({super.key});
@@ -10,8 +12,22 @@ class addReagentDialog extends StatefulWidget {
 
 class _addReagentDialogState extends State<addReagentDialog> {
   int? nameDropdownController = null;
+  TextEditingController reagentNameController = TextEditingController();
+  TextEditingController financingController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController fvController = TextEditingController();
+  TextEditingController massController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  void validateFun() {
+    if (_formKey.currentState!.validate()) {
+      print('good');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UsersProvider>(context);
     final screenSize = MediaQuery.of(context).size;
     return Dialog(
       child: Column(
@@ -31,6 +47,7 @@ class _addReagentDialogState extends State<addReagentDialog> {
             child: Container(
               width: double.infinity,
               child: Form(
+                key: _formKey,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 128, vertical: 64),
                   child: Column(
@@ -39,37 +56,73 @@ class _addReagentDialogState extends State<addReagentDialog> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                               width: screenSize.width * 0.15,
-                              child: DropdownButton(
+                              child: DropdownButtonFormField(
                                 value: nameDropdownController,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return '';
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                    errorStyle: TextStyle(height: 0),
+                                    border: OutlineInputBorder(),
+                                    label: Text('Imię')),
                                 onChanged: (value) => setState(
                                     () => nameDropdownController = value!),
-                                items: users.map((e) {
+                                items: userData.users.map((e) {
                                   return DropdownMenuItem(
                                       value: e.id, child: Text(e.name));
                                 }).toList(),
                               )),
-                          Container(
+                          SizedBox(
                             width: screenSize.width * 0.15,
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              onChanged: (value) => validateFun(),
+                              controller: reagentNameController,
+                              decoration: const InputDecoration(
+                                  errorStyle: TextStyle(height: 0),
                                   border: OutlineInputBorder(),
                                   label: Text('Nazwa Odczynnika')),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '';
+                                }
+                              },
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: screenSize.width * 0.15,
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              onChanged: (value) => validateFun(),
+                              controller: financingController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '';
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  errorStyle: TextStyle(height: 0),
                                   border: OutlineInputBorder(),
                                   label: Text('Finansowanie')),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: screenSize.width * 0.15,
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              controller: priceController,
+                              onChanged: (value) => validateFun(),
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.contains(RegExp(
+                                        r'[a-zA-Z!@#$%^&*()\-_+=<>?/~`|\\,]'))) {
+                                  return '';
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  errorStyle: TextStyle(height: 0),
                                   border: OutlineInputBorder(),
                                   label: Text('Cena')),
                             ),
@@ -79,26 +132,47 @@ class _addReagentDialogState extends State<addReagentDialog> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             width: screenSize.width * 0.15,
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              controller: massController,
+                              onChanged: (value) => validateFun(),
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.contains(
+                                      RegExp(
+                                          r'[a-zA-Z!@#$%^&*()\-_+=<>?/~`|\\,]'),
+                                    )) {
+                                  return '';
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  errorStyle: TextStyle(height: 0),
                                   border: OutlineInputBorder(),
                                   label: Text('Gramatura')),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: screenSize.width * 0.15,
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   label: Text('Data')),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: screenSize.width * 0.15,
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              onChanged: (value) => validateFun(),
+                              controller: fvController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '';
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  errorStyle: TextStyle(height: 0),
                                   border: OutlineInputBorder(),
                                   label: Text('Nr. Faktury')),
                             ),
@@ -143,7 +217,7 @@ class _addReagentDialogState extends State<addReagentDialog> {
                             elevation: 5,
                             fillColor: Colors.green,
                             onPressed: () {
-                              setState(() {});
+                              validateFun();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

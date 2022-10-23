@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../local_storage/reagent_files_logic.dart';
 import '../widgets/reagent_widget.dart';
 import '../widgets/sort_bar_widget.dart';
 import '../widgets/add_reagent_dialog_widget.dart';
-import '../local_storage/users_files_logic.dart';
+import '../providers/users_provider.dart';
+import '../providers/reagent_provider.dart';
 
 class FirstScreen extends StatefulWidget {
-  const FirstScreen({super.key});
-
   @override
   State<FirstScreen> createState() => _FirstScreenState();
 }
@@ -20,8 +19,9 @@ class _FirstScreenState extends State<FirstScreen> {
   @override
   void initState() {
     super.initState();
-
-    decodeFromReagentJSON().then((value) {
+    Provider.of<ReagentProvider>(context, listen: false)
+        .decodeFromReagentJSON()
+        .then((value) {
       setState(() {
         isLoading = false;
       });
@@ -30,6 +30,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final reagentData = Provider.of<ReagentProvider>(context);
     return GestureDetector(
       onTap: () => setState(() {
         selectedIndex = -1;
@@ -101,7 +102,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 : Expanded(
                     child: Container(
                       child: ListView.builder(
-                          itemCount: reagents.length,
+                          itemCount: reagentData.reagents.length,
                           itemBuilder: (context, index) => GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -110,17 +111,21 @@ class _FirstScreenState extends State<FirstScreen> {
                                 },
                                 child: ReagentWidget(
                                     isSelected: selectedIndex == index,
-                                    id: reagents[index].id,
-                                    reagentName: reagents[index].reagentName,
-                                    mass: reagents[index].mass,
-                                    measurement: reagents[index].measurement,
-                                    date: reagents[index].date,
-                                    issue: reagents[index].issue,
-                                    deleteFun: reagents[index].deleteFun,
-                                    financing: reagents[index].financing,
-                                    price: reagents[index].price,
-                                    name: reagents[index].name,
-                                    add: reagents[index].add),
+                                    id: reagentData.reagents[index].id,
+                                    reagentName:
+                                        reagentData.reagents[index].reagentName,
+                                    mass: reagentData.reagents[index].mass,
+                                    measurement:
+                                        reagentData.reagents[index].measurement,
+                                    date: reagentData.reagents[index].date,
+                                    issue: reagentData.reagents[index].issue,
+                                    deleteFun:
+                                        reagentData.reagents[index].deleteFun,
+                                    financing:
+                                        reagentData.reagents[index].financing,
+                                    price: reagentData.reagents[index].price,
+                                    name: reagentData.reagents[index].name,
+                                    add: reagentData.reagents[index].add),
                               )),
                     ),
                   )
