@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/reagent_model.dart';
 import '../providers/users_provider.dart';
+import '../providers/reagent_provider.dart';
 
 class addReagentDialog extends StatefulWidget {
   const addReagentDialog({super.key});
@@ -12,22 +14,23 @@ class addReagentDialog extends StatefulWidget {
 
 class _addReagentDialogState extends State<addReagentDialog> {
   int? nameDropdownController = null;
+  int? measurementDropdownController = null;
   TextEditingController reagentNameController = TextEditingController();
   TextEditingController financingController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController fvController = TextEditingController();
   TextEditingController massController = TextEditingController();
+  DateTime date = DateTime.now();
   final _formKey = GlobalKey<FormState>();
 
   void validateFun() {
-    if (_formKey.currentState!.validate()) {
-      print('good');
-    }
+    if (_formKey.currentState!.validate()) {}
   }
 
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UsersProvider>(context);
+    final reagentData = Provider.of<ReagentProvider>(context);
     final screenSize = MediaQuery.of(context).size;
     return Dialog(
       child: Column(
@@ -134,31 +137,78 @@ class _addReagentDialogState extends State<addReagentDialog> {
                         children: [
                           SizedBox(
                             width: screenSize.width * 0.15,
-                            child: TextFormField(
-                              controller: massController,
-                              onChanged: (value) => validateFun(),
-                              validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    value.contains(
-                                      RegExp(
-                                          r'[a-zA-Z!@#$%^&*()\-_+=<>?/~`|\\,]'),
-                                    )) {
-                                  return '';
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                  errorStyle: TextStyle(height: 0),
-                                  border: OutlineInputBorder(),
-                                  label: Text('Gramatura')),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: TextFormField(
+                                    controller: massController,
+                                    onChanged: (value) => validateFun(),
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          value.contains(
+                                            RegExp(
+                                                r'[a-zA-Z!@#$%^&*()\-_+=<>?/~`|\\,]'),
+                                          )) {
+                                        return '';
+                                      }
+                                    },
+                                    decoration: const InputDecoration(
+                                        errorStyle: TextStyle(height: 0),
+                                        border: OutlineInputBorder(),
+                                        label: Text('Gramatura')),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: DropdownButtonFormField(
+                                    value: measurementDropdownController,
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return '';
+                                      }
+                                    },
+                                    decoration: const InputDecoration(
+                                        errorStyle: TextStyle(height: 0),
+                                        border: OutlineInputBorder(),
+                                        label: Text('Unit')),
+                                    onChanged: (value) => setState(() =>
+                                        measurementDropdownController = value!),
+                                    items: reagentData.measurement.map((e) {
+                                      return DropdownMenuItem(
+                                          value: e.id, child: Text(e.name));
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
                             width: screenSize.width * 0.15,
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  label: Text('Data')),
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.grey),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 17),
+                                child: Text(
+                                  'Data ${date.day}/${date.month}/${date.year}',
+                                  style: TextStyle(color: Colors.grey[600]),
+                                ),
+                              ),
+                              onPressed: () async {
+                                DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (newDate == null) return;
+
+                                setState(() => date = newDate);
+                              },
                             ),
                           ),
                           SizedBox(
@@ -217,7 +267,25 @@ class _addReagentDialogState extends State<addReagentDialog> {
                             elevation: 5,
                             fillColor: Colors.green,
                             onPressed: () {
-                              validateFun();
+                              if (_formKey.currentState!.validate()) {
+                                reagentData.addNewReagent(ReagentModel(
+                                    id: reagentData.reagents.length + 1,
+                                    reagentName: reagentNameController.text,
+                                    mass: double.parse(massController.text),
+                                    measurement: reagentData
+                                        .measurement[
+                                            measurementDropdownController!]
+                                        .name,
+                                    date: date,
+                                    issue: () {},
+                                    deleteFun: () {},
+                                    financing: financingController.text,
+                                    price: double.parse(priceController.text),
+                                    name: userData
+                                        .users[nameDropdownController!].name,
+                                    add: () {}));
+                              }
+                              Navigator.of(context).pop();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

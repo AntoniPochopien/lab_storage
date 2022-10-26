@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../widgets/reagent_widget.dart';
 import '../widgets/sort_bar_widget.dart';
 import '../widgets/add_reagent_dialog_widget.dart';
-import '../providers/users_provider.dart';
 import '../providers/reagent_provider.dart';
 
 class FirstScreen extends StatefulWidget {
@@ -99,36 +98,48 @@ class _FirstScreenState extends State<FirstScreen> {
             SortBarWidget(),
             isLoading
                 ? Expanded(child: Center(child: CircularProgressIndicator()))
-                : Expanded(
-                    child: Container(
-                      child: ListView.builder(
-                          itemCount: reagentData.reagents.length,
-                          itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedIndex = index;
-                                  });
-                                },
-                                child: ReagentWidget(
-                                    isSelected: selectedIndex == index,
-                                    id: reagentData.reagents[index].id,
-                                    reagentName:
-                                        reagentData.reagents[index].reagentName,
-                                    mass: reagentData.reagents[index].mass,
-                                    measurement:
-                                        reagentData.reagents[index].measurement,
-                                    date: reagentData.reagents[index].date,
-                                    issue: reagentData.reagents[index].issue,
-                                    deleteFun:
-                                        reagentData.reagents[index].deleteFun,
-                                    financing:
-                                        reagentData.reagents[index].financing,
-                                    price: reagentData.reagents[index].price,
-                                    name: reagentData.reagents[index].name,
-                                    add: reagentData.reagents[index].add),
-                              )),
-                    ),
-                  )
+                : reagentData.reagents.isEmpty
+                    ? Expanded(
+                        child: Center(
+                            child: Text(
+                        'Brak odczynników',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            color: Colors.grey[800]),
+                      )))
+                    : Expanded(
+                        child: Container(
+                          child: ListView.builder(
+                              itemCount: reagentData.reagents.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedIndex = index;
+                                      });
+                                    },
+                                    child: ReagentWidget(
+                                        isSelected: selectedIndex == index,
+                                        id: reagentData.reagents[index].id,
+                                        reagentName: reagentData
+                                            .reagents[index].reagentName,
+                                        mass: reagentData.reagents[index].mass,
+                                        measurement: reagentData
+                                            .reagents[index].measurement,
+                                        date: reagentData.reagents[index].date,
+                                        issue:
+                                            reagentData.reagents[index].issue,
+                                        deleteFun: reagentData
+                                            .reagents[index].deleteFun,
+                                        financing: reagentData
+                                            .reagents[index].financing,
+                                        price:
+                                            reagentData.reagents[index].price,
+                                        name: reagentData.reagents[index].name,
+                                        add: reagentData.reagents[index].add),
+                                  )),
+                        ),
+                      )
           ],
         ),
       ),

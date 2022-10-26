@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/reagent_provider.dart';
 
 class ReagentWidget extends StatefulWidget {
   bool isSelected;
@@ -38,6 +40,7 @@ class ReagentWidget extends StatefulWidget {
 class _ReagentWidgetState extends State<ReagentWidget> {
   @override
   Widget build(BuildContext context) {
+    final reagentData = Provider.of<ReagentProvider>(context);
     return Container(
       child: Card(
           shape: RoundedRectangleBorder(
@@ -56,7 +59,13 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                     '${widget.mass.toString()} ${widget.measurement}',
                   ))),
               Expanded(
-                  flex: 2, child: Center(child: Text(widget.date.toString()))),
+                flex: 2,
+                child: Center(
+                  child: Text(
+                    DateFormat("dd.MM.yyyy").format(widget.date),
+                  ),
+                ),
+              ),
               Expanded(
                   flex: 1,
                   child: Center(
@@ -80,14 +89,15 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RawMaterialButton(
-                        onPressed: () => widget.issue,
+                        onPressed: () {
+                          reagentData.deleteReagent(widget.id);
+                        },
                         child: Text('X',
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
                         fillColor: Colors.grey,
-                        //shape: CircleBorder(),
                       ),
                     ),
                   )),

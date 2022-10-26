@@ -4,22 +4,39 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 
 import '../models/reagent_model.dart';
+import '../models/measurement_model.dart';
 
 class ReagentProvider extends ChangeNotifier {
-  List<ReagentModel> reagents = [
-    // ReagentModel(
-    //     id: 1,
-    //     reagentName: 'name',
-    //     mass: 8,
-    //     measurement: 'KG',
-    //     date: DateTime.now(),
-    //     issue: () {},
-    //     deleteFun: () {},
-    //     financing: 'financing',
-    //     price: 90,
-    //     name: 'name',
-    //     add: () {}),
+  List<ReagentModel> reagents = [];
+
+  List<Measurement> measurement = [
+    Measurement(0, 'Mg'),
+    Measurement(1, 'g'),
+    Measurement(2, 'kg'),
+    Measurement(3, 'ml'),
+    Measurement(4, 'l'),
   ];
+
+//dodaje reagent do listy
+  void addNewReagent(ReagentModel data) {
+    reagents.add(
+      ReagentModel(
+        id: reagents.length,
+        reagentName: data.reagentName,
+        mass: data.mass,
+        measurement: data.measurement,
+        date: data.date,
+        issue: () {},
+        deleteFun: () {},
+        financing: data.financing,
+        price: data.price,
+        name: data.name,
+        add: () {},
+      ),
+    );
+    encodeToReagentJSON();
+    notifyListeners();
+  }
 
 //zapisuje podanego jsona do pliku w konkretnej ścieżce uzytkownika
   Future<File> writeReagentData(String data) async {
@@ -42,27 +59,31 @@ class ReagentProvider extends ChangeNotifier {
 
 //dekodowanie z jsona i fetchowanie w obiekty
   Future<void> decodeFromReagentJSON() async {
-    String output = await getReagentData();
-    Map<String, dynamic> decodeReagents = jsonDecode(output);
-    List helper = decodeReagents['list'];
-    helper.forEach((element) {
-      reagents.add(
-        ReagentModel(
-          id: element['id'],
-          reagentName: element['reagentName'],
-          mass: element['mass'],
-          measurement: element['measurement'],
-          date: DateTime.now(),
-          issue: () {},
-          deleteFun: () {},
-          financing: element['financing'],
-          price: element['price'],
-          name: element['name'],
-          add: () {},
-        ),
-      );
-    });
-    notifyListeners();
+    try {
+      String output = await getReagentData();
+      Map<String, dynamic> decodeReagents = jsonDecode(output);
+      List helper = decodeReagents['list'];
+      helper.forEach((element) {
+        reagents.add(
+          ReagentModel(
+            id: element['id'],
+            reagentName: element['reagentName'],
+            mass: element['mass'],
+            measurement: element['measurement'],
+            date: DateTime.parse(element['date']),
+            issue: () {},
+            deleteFun: () {},
+            financing: element['financing'],
+            price: element['price'],
+            name: element['name'],
+            add: () {},
+          ),
+        );
+      });
+      notifyListeners();
+    } catch (e) {
+      return;
+    }
   }
 
 //kodowanie w jsona
@@ -105,5 +126,66 @@ class ReagentProvider extends ChangeNotifier {
     Function add,
   ) {
     print('zapisano');
+  }
+
+  //w przypadku usuwania odczynnika, poprawia id tak aby były w koleiności inkrementującej o 1
+  void fixId() {
+    int _index = 0;
+    reagents.forEach((element) {
+      element.id = _index;
+      _index += 1;
+    });
+  }
+
+  //usuwa odczynnik z listy, wywołuje też nadpis pliku na dysku (stale usuniecie odczynnika)
+  void deleteReagent(int itemId) {
+    var result = reagents.indexWhere((element) {
+      return element.id == itemId;
+    });
+    reagents.removeAt(result);
+    fixId();
+    encodeToReagentJSON();
+    notifyListeners();
+  }
+
+  void sortItems(int i) {
+    switch (i) {
+      case 0:
+        {
+          reagents.sort((a, b) => a.id.compareTo(b.id));
+        }
+        break;
+      case 1:
+        {
+          reagents.sort((a, b) => a.reagentName.compareTo(b.reagentName));
+        }
+        break;
+      case 2:
+        {
+          reagents.sort((a, b) => a.mass.compareTo(b.mass));
+        }
+        break;
+      case 3:
+        {
+          reagents.sort((a, b) => a.date.compareTo(b.date));
+        }
+        break;
+      case 4:
+        {
+          reagents.sort((a, b) => a.financing.compareTo(b.financing));
+        }
+        break;
+      case 5:
+        {
+          reagents.sort((a, b) => a.price.compareTo(b.price));
+        }
+        break;
+      case 6:
+        {
+          reagents.sort((a, b) => a.name.compareTo(b.name));
+        }
+        break;
+    }
+    notifyListeners();
   }
 }
