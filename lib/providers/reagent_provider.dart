@@ -139,41 +139,51 @@ class ReagentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sortItems(int i) {
+  void sortItems(int i, bool reversed) {
     switch (i) {
       case 0:
         {
-          reagents.sort((a, b) => a.id.compareTo(b.id));
+          reagents.sort(
+              (a, b) => reversed ? b.id.compareTo(a.id) : a.id.compareTo(b.id));
         }
         break;
       case 1:
         {
-          reagents.sort((a, b) => a.reagentName.compareTo(b.reagentName));
+          reagents.sort((a, b) => reversed
+              ? b.reagentName.compareTo(a.reagentName)
+              : a.reagentName.compareTo(b.reagentName));
         }
         break;
       case 2:
         {
-          reagents.sort((a, b) => a.mass.compareTo(b.mass));
+          reagents.sort((a, b) =>
+              reversed ? b.mass.compareTo(a.mass) : a.mass.compareTo(b.mass));
         }
         break;
       case 3:
         {
-          reagents.sort((a, b) => a.date.compareTo(b.date));
+          reagents.sort((a, b) =>
+              reversed ? b.date.compareTo(a.date) : a.date.compareTo(b.date));
         }
         break;
       case 4:
         {
-          reagents.sort((a, b) => a.financing.compareTo(b.financing));
+          reagents.sort((a, b) => reversed
+              ? b.financing.compareTo(a.financing)
+              : a.financing.compareTo(b.financing));
         }
         break;
       case 5:
         {
-          reagents.sort((a, b) => a.price.compareTo(b.price));
+          reagents.sort((a, b) => reversed
+              ? b.price.compareTo(a.price)
+              : a.price.compareTo(b.price));
         }
         break;
       case 6:
         {
-          reagents.sort((a, b) => a.name.compareTo(b.name));
+          reagents.sort((a, b) =>
+              reversed ? b.name.compareTo(a.name) : a.name.compareTo(b.name));
         }
         break;
     }

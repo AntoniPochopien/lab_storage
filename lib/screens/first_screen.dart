@@ -118,6 +118,14 @@ class _FirstScreenState extends State<FirstScreen> {
                                         selectedIndex = index;
                                       });
                                     },
+                                    onLongPress: () {
+                                      //TODO dodaj onko edycji odczynnika
+                                      setState(() {
+                                        selectedIndex = index;
+                                      });
+                                      print(
+                                          'Edycja ${reagentData.reagents[index].reagentName}');
+                                    },
                                     child: ReagentWidget(
                                       isSelected: selectedIndex == index,
                                       id: reagentData.reagents[index].id,

@@ -46,18 +46,21 @@ class _ReagentWidgetState extends State<ReagentWidget> {
           child: Row(
             children: [
               Expanded(
-                  flex: 2, child: Center(child: Text(widget.id.toString()))),
-              Expanded(flex: 2, child: Center(child: Text(widget.reagentName))),
+                  flex: 2,
+                  child: Center(child: SelectableText(widget.id.toString()))),
+              Expanded(
+                  flex: 2,
+                  child: Center(child: SelectableText(widget.reagentName))),
               Expanded(
                   flex: 2,
                   child: Center(
-                      child: Text(
+                      child: SelectableText(
                     '${widget.mass.toString()} ${widget.measurement}',
                   ))),
               Expanded(
                 flex: 2,
                 child: Center(
-                  child: Text(
+                  child: SelectableText(
                     DateFormat("dd.MM.yyyy").format(widget.date),
                   ),
                 ),
@@ -99,11 +102,15 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                   )),
               Expanded(
                   flex: 2,
-                  child: Center(child: Text(widget.financing.toString()))),
+                  child: Center(
+                      child: SelectableText(widget.financing.toString()))),
               Expanded(
-                  flex: 2, child: Center(child: Text(widget.price.toString()))),
+                  flex: 2,
+                  child:
+                      Center(child: SelectableText(widget.price.toString()))),
               Expanded(
-                  flex: 2, child: Center(child: Text(widget.name.toString()))),
+                  flex: 2,
+                  child: Center(child: SelectableText(widget.name.toString()))),
               Expanded(
                 flex: 1,
                 child: Center(
