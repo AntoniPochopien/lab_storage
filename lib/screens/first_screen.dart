@@ -119,24 +119,19 @@ class _FirstScreenState extends State<FirstScreen> {
                                       });
                                     },
                                     child: ReagentWidget(
-                                        isSelected: selectedIndex == index,
-                                        id: reagentData.reagents[index].id,
-                                        reagentName: reagentData
-                                            .reagents[index].reagentName,
-                                        mass: reagentData.reagents[index].mass,
-                                        measurement: reagentData
-                                            .reagents[index].measurement,
-                                        date: reagentData.reagents[index].date,
-                                        issue:
-                                            reagentData.reagents[index].issue,
-                                        deleteFun: reagentData
-                                            .reagents[index].deleteFun,
-                                        financing: reagentData
-                                            .reagents[index].financing,
-                                        price:
-                                            reagentData.reagents[index].price,
-                                        name: reagentData.reagents[index].name,
-                                        add: reagentData.reagents[index].add),
+                                      isSelected: selectedIndex == index,
+                                      id: reagentData.reagents[index].id,
+                                      reagentName: reagentData
+                                          .reagents[index].reagentName,
+                                      mass: reagentData.reagents[index].mass,
+                                      measurement: reagentData
+                                          .reagents[index].measurement,
+                                      date: reagentData.reagents[index].date,
+                                      financing:
+                                          reagentData.reagents[index].financing,
+                                      price: reagentData.reagents[index].price,
+                                      name: reagentData.reagents[index].name,
+                                    ),
                                   )),
                         ),
                       )

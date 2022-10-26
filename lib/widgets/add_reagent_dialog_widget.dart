@@ -269,21 +269,19 @@ class _addReagentDialogState extends State<addReagentDialog> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 reagentData.addNewReagent(ReagentModel(
-                                    id: reagentData.reagents.length + 1,
-                                    reagentName: reagentNameController.text,
-                                    mass: double.parse(massController.text),
-                                    measurement: reagentData
-                                        .measurement[
-                                            measurementDropdownController!]
-                                        .name,
-                                    date: date,
-                                    issue: () {},
-                                    deleteFun: () {},
-                                    financing: financingController.text,
-                                    price: double.parse(priceController.text),
-                                    name: userData
-                                        .users[nameDropdownController!].name,
-                                    add: () {}));
+                                  id: reagentData.reagents.length + 1,
+                                  reagentName: reagentNameController.text,
+                                  mass: double.parse(massController.text),
+                                  measurement: reagentData
+                                      .measurement[
+                                          measurementDropdownController!]
+                                      .name,
+                                  date: date,
+                                  financing: financingController.text,
+                                  price: double.parse(priceController.text),
+                                  name: userData
+                                      .users[nameDropdownController!].name,
+                                ));
                               }
                               Navigator.of(context).pop();
                             },

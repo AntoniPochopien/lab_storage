@@ -26,12 +26,9 @@ class ReagentProvider extends ChangeNotifier {
         mass: data.mass,
         measurement: data.measurement,
         date: data.date,
-        issue: () {},
-        deleteFun: () {},
         financing: data.financing,
         price: data.price,
         name: data.name,
-        add: () {},
       ),
     );
     encodeToReagentJSON();
@@ -71,12 +68,9 @@ class ReagentProvider extends ChangeNotifier {
             mass: element['mass'],
             measurement: element['measurement'],
             date: DateTime.parse(element['date']),
-            issue: () {},
-            deleteFun: () {},
             financing: element['financing'],
             price: element['price'],
             name: element['name'],
-            add: () {},
           ),
         );
       });
@@ -97,12 +91,9 @@ class ReagentProvider extends ChangeNotifier {
         'mass': element.mass,
         'measurement': element.measurement,
         'date': element.date.toString(),
-        'issue': element.issue.toString(),
-        'deleteFun': element.deleteFun.toString(),
         'financing': element.financing,
         'price': element.price,
         'name': element.name,
-        'add': element.add.toString(),
       });
     });
     jsonBody['list'] = listOfMaps;

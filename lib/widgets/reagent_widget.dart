@@ -12,26 +12,22 @@ class ReagentWidget extends StatefulWidget {
   String
       measurement; //oznaczenie miary do gramatury ^ Litry gramy kilogramy itp
   DateTime date;
-  Function issue; //wydanie
-  Function deleteFun;
+
   String financing;
   double price;
   String name; //imie kogos?
-  Function add;
 
-  ReagentWidget(
-      {required this.isSelected,
-      required this.id,
-      required this.reagentName,
-      required this.mass,
-      required this.measurement,
-      required this.date,
-      required this.issue,
-      required this.deleteFun,
-      required this.financing,
-      required this.price,
-      required this.name,
-      required this.add});
+  ReagentWidget({
+    required this.isSelected,
+    required this.id,
+    required this.reagentName,
+    required this.mass,
+    required this.measurement,
+    required this.date,
+    required this.financing,
+    required this.price,
+    required this.name,
+  });
 
   @override
   State<ReagentWidget> createState() => _ReagentWidgetState();
@@ -72,7 +68,7 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RawMaterialButton(
-                        onPressed: () => widget.issue,
+                        onPressed: () {},
                         child: Text('-',
                             style: TextStyle(
                                 fontSize: 24,
@@ -114,7 +110,7 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RawMaterialButton(
-                      onPressed: () => widget.issue,
+                      onPressed: () {},
                       child: Text(
                         '+',
                         style: TextStyle(
