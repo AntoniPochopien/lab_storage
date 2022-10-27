@@ -17,19 +17,31 @@ class ReagentProvider extends ChangeNotifier {
     Measurement(4, 'l'),
   ];
 
+  int findIdByMeasurement(String m) {
+    final findedId = measurement.indexWhere((element) {
+      if (element.name == m) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return findedId;
+  }
+
 //dodaje reagent do listy
   void addNewReagent(ReagentModel data) {
     reagents.add(
       ReagentModel(
-        id: reagents.length,
-        reagentName: data.reagentName,
-        mass: data.mass,
-        measurement: data.measurement,
-        date: data.date,
-        financing: data.financing,
-        price: data.price,
-        name: data.name,
-      ),
+          id: reagents.length,
+          reagentName: data.reagentName,
+          mass: data.mass,
+          measurement: data.measurement,
+          date: data.date,
+          financing: data.financing,
+          fv: data.fv,
+          price: data.price,
+          name: data.name,
+          comment: data.comment),
     );
     encodeToReagentJSON();
     notifyListeners();
@@ -69,8 +81,10 @@ class ReagentProvider extends ChangeNotifier {
             measurement: element['measurement'],
             date: DateTime.parse(element['date']),
             financing: element['financing'],
+            fv: element['fv'],
             price: element['price'],
             name: element['name'],
+            comment: element['comment'],
           ),
         );
       });
@@ -92,8 +106,10 @@ class ReagentProvider extends ChangeNotifier {
         'measurement': element.measurement,
         'date': element.date.toString(),
         'financing': element.financing,
+        'fv': element.fv,
         'price': element.price,
         'name': element.name,
+        'comment': element.comment,
       });
     });
     jsonBody['list'] = listOfMaps;
@@ -134,6 +150,20 @@ class ReagentProvider extends ChangeNotifier {
       return element.id == itemId;
     });
     reagents.removeAt(result);
+    fixId();
+    encodeToReagentJSON();
+    notifyListeners();
+  }
+
+  void updateReagents(int id, ReagentModel item) {
+    final findedId = reagents.indexWhere((element) {
+      if (element.id == id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    reagents[findedId] = item;
     fixId();
     encodeToReagentJSON();
     notifyListeners();

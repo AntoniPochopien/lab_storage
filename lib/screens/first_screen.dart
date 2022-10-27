@@ -57,7 +57,7 @@ class _FirstScreenState extends State<FirstScreen> {
                       onPressed: () {
                         showDialog(
                             context: context,
-                            builder: (_) => addReagentDialog());
+                            builder: (_) => addReagentDialog(false, null));
                       },
                       child: Text(
                         '+',
@@ -119,12 +119,13 @@ class _FirstScreenState extends State<FirstScreen> {
                                       });
                                     },
                                     onLongPress: () {
-                                      //TODO dodaj onko edycji odczynnika
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => addReagentDialog(true,
+                                              reagentData.reagents[index].id));
                                       setState(() {
                                         selectedIndex = index;
                                       });
-                                      print(
-                                          'Edycja ${reagentData.reagents[index].reagentName}');
                                     },
                                     child: ReagentWidget(
                                       isSelected: selectedIndex == index,

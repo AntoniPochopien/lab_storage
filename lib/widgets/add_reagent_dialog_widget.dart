@@ -6,7 +6,10 @@ import '../providers/users_provider.dart';
 import '../providers/reagent_provider.dart';
 
 class addReagentDialog extends StatefulWidget {
-  const addReagentDialog({super.key});
+  bool isEditing;
+  int? id;
+
+  addReagentDialog(this.isEditing, this.id);
 
   @override
   State<addReagentDialog> createState() => _addReagentDialogState();
@@ -20,11 +23,57 @@ class _addReagentDialogState extends State<addReagentDialog> {
   TextEditingController priceController = TextEditingController();
   TextEditingController fvController = TextEditingController();
   TextEditingController massController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
   DateTime date = DateTime.now();
   final _formKey = GlobalKey<FormState>();
 
   void validateFun() {
     if (_formKey.currentState!.validate()) {}
+  }
+
+  Future opneDialog() => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Uwaga!'),
+          content: const Text('Czy napewno chcesz edytować ten odczynnik?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Tak')),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text('Anuluj')),
+          ],
+        );
+      });
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.isEditing) {
+      final item = Provider.of<ReagentProvider>(context, listen: false)
+          .reagents[widget.id!];
+      reagentNameController.text = item.reagentName;
+      financingController.text = item.financing;
+      priceController.text = item.price.toString();
+      fvController.text = item.fv;
+      massController.text = item.mass.toString();
+      date = item.date;
+      nameDropdownController =
+          Provider.of<UsersProvider>(context, listen: false)
+              .findUserIdByName(item.name);
+      measurementDropdownController =
+          Provider.of<ReagentProvider>(context, listen: false)
+              .findIdByMeasurement(item.measurement);
+      commentController.text = item.comment;
+    }
   }
 
   @override
@@ -39,7 +88,7 @@ class _addReagentDialogState extends State<addReagentDialog> {
               flex: 1,
               child: Center(
                   child: Text(
-                'Przyjęcie Magazynowe',
+                widget.isEditing ? 'Edytuj' : 'Przyjęcie Magazynowe',
                 style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -250,6 +299,7 @@ class _addReagentDialogState extends State<addReagentDialog> {
                     child: Container(
                       height: screenSize.height * 0.3,
                       child: TextFormField(
+                        controller: commentController,
                         expands: true,
                         maxLines: null,
                         decoration: InputDecoration(
@@ -266,24 +316,56 @@ class _addReagentDialogState extends State<addReagentDialog> {
                           RawMaterialButton(
                             elevation: 5,
                             fillColor: Colors.green,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                reagentData.addNewReagent(ReagentModel(
-                                  id: reagentData.reagents.length + 1,
-                                  reagentName: reagentNameController.text,
-                                  mass: double.parse(massController.text),
-                                  measurement: reagentData
-                                      .measurement[
-                                          measurementDropdownController!]
-                                      .name,
-                                  date: date,
-                                  financing: financingController.text,
-                                  price: double.parse(priceController.text),
-                                  name: userData
-                                      .users[nameDropdownController!].name,
-                                ));
+                                if (widget.isEditing) {
+                                  await opneDialog().then((value) {
+                                    if (value == true) {
+                                      reagentData.updateReagents(
+                                          widget.id!,
+                                          ReagentModel(
+                                            id: reagentData.reagents.length + 1,
+                                            reagentName:
+                                                reagentNameController.text,
+                                            mass: double.parse(
+                                                massController.text),
+                                            measurement: reagentData
+                                                .measurement[
+                                                    measurementDropdownController!]
+                                                .name,
+                                            date: date,
+                                            financing: financingController.text,
+                                            fv: fvController.text,
+                                            price: double.parse(
+                                                priceController.text),
+                                            name: userData
+                                                .users[nameDropdownController!]
+                                                .name,
+                                            comment: commentController.text,
+                                          ));
+                                      Navigator.of(context).pop();
+                                    }
+                                  });
+                                } else {
+                                  reagentData.addNewReagent(ReagentModel(
+                                    id: reagentData.reagents.length + 1,
+                                    reagentName: reagentNameController.text,
+                                    mass: double.parse(massController.text),
+                                    measurement: reagentData
+                                        .measurement[
+                                            measurementDropdownController!]
+                                        .name,
+                                    date: date,
+                                    financing: financingController.text,
+                                    fv: fvController.text,
+                                    price: double.parse(priceController.text),
+                                    name: userData
+                                        .users[nameDropdownController!].name,
+                                    comment: commentController.text,
+                                  ));
+                                  Navigator.of(context).pop();
+                                }
                               }
-                              Navigator.of(context).pop();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

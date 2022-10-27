@@ -44,4 +44,15 @@ class UsersProvider extends ChangeNotifier {
     String str = json.encode(jsonBody);
     writeUserData(str);
   }
+
+  int findUserIdByName(String name) {
+    final findedId = users.indexWhere((element) {
+      if (element.name == name) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return findedId;
+  }
 }
