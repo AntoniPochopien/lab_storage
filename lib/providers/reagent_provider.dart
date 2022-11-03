@@ -144,6 +144,16 @@ class ReagentProvider extends ChangeNotifier {
     });
   }
 
+  ReagentModel findReagentById(int passedId) {
+    final x = reagents.indexWhere((element) {
+      if (element.id == passedId)
+        return true;
+      else
+        return false;
+    });
+    return reagents[x];
+  }
+
   //usuwa odczynnik z listy, wywołuje też nadpis pliku na dysku (stale usuniecie odczynnika)
   void deleteReagent(int itemId) {
     var result = reagents.indexWhere((element) {

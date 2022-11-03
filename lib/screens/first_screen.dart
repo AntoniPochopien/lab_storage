@@ -119,13 +119,14 @@ class _FirstScreenState extends State<FirstScreen> {
                                       });
                                     },
                                     onLongPress: () {
+                                      setState(() {
+                                        print(reagentData.reagents[index].id);
+                                        selectedIndex = index;
+                                      });
                                       showDialog(
                                           context: context,
                                           builder: (_) => addReagentDialog(true,
                                               reagentData.reagents[index].id));
-                                      setState(() {
-                                        selectedIndex = index;
-                                      });
                                     },
                                     child: ReagentWidget(
                                       isSelected: selectedIndex == index,

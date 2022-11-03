@@ -16,8 +16,8 @@ class addReagentDialog extends StatefulWidget {
 }
 
 class _addReagentDialogState extends State<addReagentDialog> {
-  int? nameDropdownController = null;
-  int? measurementDropdownController = null;
+  int? nameDropdownController;
+  int? measurementDropdownController;
   TextEditingController reagentNameController = TextEditingController();
   TextEditingController financingController = TextEditingController();
   TextEditingController priceController = TextEditingController();
@@ -59,7 +59,8 @@ class _addReagentDialogState extends State<addReagentDialog> {
     super.initState();
     if (widget.isEditing) {
       final item = Provider.of<ReagentProvider>(context, listen: false)
-          .reagents[widget.id!];
+          .findReagentById(widget.id!);
+      print(item.name);
       reagentNameController.text = item.reagentName;
       financingController.text = item.financing;
       priceController.text = item.price.toString();
