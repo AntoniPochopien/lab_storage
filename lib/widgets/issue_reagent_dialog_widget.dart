@@ -269,6 +269,15 @@ class _IssueReagentDialogWidgetState extends State<IssueReagentDialogWidget> {
                                             measurementDropdownController!]
                                         .name,
                                     widget.item.mass)) {
+                                  widget.item.mass -= convertMassToMin(
+                                      double.parse(massController.text),
+                                      reagentData
+                                          .measurement[
+                                              measurementDropdownController!]
+                                          .name);
+                                  reagentData.updateReagents(
+                                      widget.item.id, widget.item);
+                                  Navigator.pop(context);
                                 } else {
                                   showDialog(
                                     context: context,

@@ -83,6 +83,36 @@ class _addReagentDialogState extends State<addReagentDialog> {
         );
       });
 
+  double convertMassToValid(double mass, String massTag) {
+    //zmienia wagę z najmniejszej na prawidłową
+    switch (massTag) {
+      case 'kg':
+        {
+          return mass / 1000000;
+        }
+      case 'g':
+        {
+          return mass / 1000;
+        }
+      case 'mg':
+        {
+          return mass;
+        }
+      case 'l':
+        {
+          return mass / 1000;
+        }
+      case 'ml':
+        {
+          return mass;
+        }
+      default:
+        {
+          return 0;
+        }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -94,7 +124,8 @@ class _addReagentDialogState extends State<addReagentDialog> {
       financingController.text = item.financing;
       priceController.text = item.price.toString();
       fvController.text = item.fv;
-      massController.text = item.mass.toString();
+      massController.text =
+          convertMassToValid(item.mass, item.measurement).toString();
       date = item.date;
       nameDropdownController =
           Provider.of<UsersProvider>(context, listen: false)

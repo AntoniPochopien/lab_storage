@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/reagent_provider.dart';
+import '../widgets/issue_reagent_dialog_widget.dart';
 
 class ReagentWidget extends StatefulWidget {
   bool isSelected;
@@ -101,7 +102,12 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RawMaterialButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (_) => IssueReagentDialogWidget(
+                                  reagentData.findReagentById(widget.id)));
+                        },
                         child: Text('-',
                             style: TextStyle(
                                 fontSize: 24,
