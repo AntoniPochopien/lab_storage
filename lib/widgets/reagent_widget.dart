@@ -34,6 +34,36 @@ class ReagentWidget extends StatefulWidget {
 }
 
 class _ReagentWidgetState extends State<ReagentWidget> {
+  double convertMassToValid(double mass, String massTag) {
+    //zmienia wagę z najmniejszej na prawidłową
+    switch (massTag) {
+      case 'kg':
+        {
+          return mass / 1000000;
+        }
+      case 'g':
+        {
+          return mass / 1000;
+        }
+      case 'mg':
+        {
+          return mass;
+        }
+      case 'l':
+        {
+          return mass / 1000;
+        }
+      case 'ml':
+        {
+          return mass;
+        }
+      default:
+        {
+          return 0;
+        }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final reagentData = Provider.of<ReagentProvider>(context);
@@ -55,7 +85,7 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                   flex: 2,
                   child: Center(
                       child: SelectableText(
-                    '${widget.mass.toString()} ${widget.measurement}',
+                    '${convertMassToValid(widget.mass, widget.measurement).toString()} ${widget.measurement}', //${widget.mass.toString()} ${widget.measurement}
                   ))),
               Expanded(
                 flex: 2,

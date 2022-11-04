@@ -31,6 +31,36 @@ class _addReagentDialogState extends State<addReagentDialog> {
     if (_formKey.currentState!.validate()) {}
   }
 
+  double converMassToMin(double mass, String massTag) {
+    //konweruje na najmniejszą możliwą wartość
+    switch (massTag) {
+      case 'kg':
+        {
+          return mass * 1000000;
+        }
+      case 'g':
+        {
+          return mass * 1000;
+        }
+      case 'mg':
+        {
+          return mass;
+        }
+      case 'l':
+        {
+          return mass * 1000;
+        }
+      case 'ml':
+        {
+          return mass;
+        }
+      default:
+        {
+          return 0;
+        }
+    }
+  }
+
   Future opneDialog() => showDialog(
       context: context,
       barrierDismissible: false,
@@ -60,7 +90,6 @@ class _addReagentDialogState extends State<addReagentDialog> {
     if (widget.isEditing) {
       final item = Provider.of<ReagentProvider>(context, listen: false)
           .findReagentById(widget.id!);
-      print(item.name);
       reagentNameController.text = item.reagentName;
       financingController.text = item.financing;
       priceController.text = item.price.toString();
@@ -244,7 +273,7 @@ class _addReagentDialogState extends State<addReagentDialog> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 17),
                                 child: Text(
-                                  'Data ${date.day}/${date.month}/${date.year}',
+                                  'Data: ${date.day}/${date.month}/${date.year}',
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
                               ),
@@ -310,99 +339,106 @@ class _addReagentDialogState extends State<addReagentDialog> {
                   ),
                   Expanded(
                     flex: 7,
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RawMaterialButton(
-                            elevation: 5,
-                            fillColor: Colors.green,
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                if (widget.isEditing) {
-                                  await opneDialog().then((value) {
-                                    if (value == true) {
-                                      reagentData.updateReagents(
-                                          widget.id!,
-                                          ReagentModel(
-                                            id: reagentData.reagents.length + 1,
-                                            reagentName:
-                                                reagentNameController.text,
-                                            mass: double.parse(
-                                                massController.text),
-                                            measurement: reagentData
-                                                .measurement[
-                                                    measurementDropdownController!]
-                                                .name,
-                                            date: date,
-                                            financing: financingController.text,
-                                            fv: fvController.text,
-                                            price: double.parse(
-                                                priceController.text),
-                                            name: userData
-                                                .users[nameDropdownController!]
-                                                .name,
-                                            comment: commentController.text,
-                                          ));
-                                      Navigator.of(context).pop();
-                                    }
-                                  });
-                                } else {
-                                  reagentData.addNewReagent(ReagentModel(
-                                    id: reagentData.reagents.length + 1,
-                                    reagentName: reagentNameController.text,
-                                    mass: double.parse(massController.text),
-                                    measurement: reagentData
-                                        .measurement[
-                                            measurementDropdownController!]
-                                        .name,
-                                    date: date,
-                                    financing: financingController.text,
-                                    fv: fvController.text,
-                                    price: double.parse(priceController.text),
-                                    name: userData
-                                        .users[nameDropdownController!].name,
-                                    comment: commentController.text,
-                                  ));
-                                  Navigator.of(context).pop();
-                                }
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RawMaterialButton(
+                          elevation: 5,
+                          fillColor: Colors.green,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (widget.isEditing) {
+                                await opneDialog().then((value) {
+                                  if (value == true) {
+                                    reagentData.updateReagents(
+                                        widget.id!,
+                                        ReagentModel(
+                                          id: reagentData.reagents.length + 1,
+                                          reagentName:
+                                              reagentNameController.text,
+                                          mass: converMassToMin(
+                                              double.parse(massController.text),
+                                              reagentData
+                                                  .measurement[
+                                                      measurementDropdownController!]
+                                                  .name),
+                                          measurement: reagentData
+                                              .measurement[
+                                                  measurementDropdownController!]
+                                              .name,
+                                          date: date,
+                                          financing: financingController.text,
+                                          fv: fvController.text,
+                                          price: double.parse(
+                                              priceController.text),
+                                          name: userData
+                                              .users[nameDropdownController!]
+                                              .name,
+                                          comment: commentController.text,
+                                        ));
+                                    Navigator.of(context).pop();
+                                  }
+                                });
+                              } else {
+                                reagentData.addNewReagent(ReagentModel(
+                                  id: reagentData.reagents.length + 1,
+                                  reagentName: reagentNameController.text,
+                                  mass: converMassToMin(
+                                      double.parse(massController.text),
+                                      reagentData
+                                          .measurement[
+                                              measurementDropdownController!]
+                                          .name),
+                                  measurement: reagentData
+                                      .measurement[
+                                          measurementDropdownController!]
+                                      .name,
+                                  date: date,
+                                  financing: financingController.text,
+                                  fv: fvController.text,
+                                  price: double.parse(priceController.text),
+                                  name: userData
+                                      .users[nameDropdownController!].name,
+                                  comment: commentController.text,
+                                ));
+                                Navigator.of(context).pop();
                               }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Zapisz',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    color: Colors.white),
-                              ),
+                            }
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Zapisz',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.white),
                             ),
                           ),
-                          SizedBox(
-                            width: 50,
-                          ),
-                          RawMaterialButton(
-                            elevation: 5,
-                            fillColor: Colors.grey,
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Anuluj',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    color: Colors.white),
-                              ),
+                        ),
+                        const SizedBox(
+                          width: 50,
+                        ),
+                        RawMaterialButton(
+                          elevation: 5,
+                          fillColor: Colors.grey,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Anuluj',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.white),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

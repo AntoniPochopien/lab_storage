@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/issue_reagent_dialog_widget.dart';
 import '../widgets/reagent_widget.dart';
 import '../widgets/sort_bar_widget.dart';
 import '../widgets/add_reagent_dialog_widget.dart';
@@ -59,7 +60,7 @@ class _FirstScreenState extends State<FirstScreen> {
                             context: context,
                             builder: (_) => addReagentDialog(false, null));
                       },
-                      child: Text(
+                      child: const Text(
                         '+',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -77,9 +78,22 @@ class _FirstScreenState extends State<FirstScreen> {
                       elevation: 5,
                       fillColor: Colors.grey,
                       onPressed: () {
-                        setState(() {});
+                        if (selectedIndex != -1) {
+                          showDialog(
+                              context: context,
+                              builder: (_) => IssueReagentDialogWidget(
+                                  reagentData.findReagentById(
+                                      reagentData.reagents[selectedIndex].id)));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              duration: Duration(seconds: 1),
+                              content: Text('Musisz najpierw wybrac odczynnik'),
+                            ),
+                          );
+                        }
                       },
-                      child: Text(
+                      child: const Text(
                         '-',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -89,7 +103,7 @@ class _FirstScreenState extends State<FirstScreen> {
                     ),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 14,
                   child: SizedBox(),
                 ),
@@ -97,7 +111,8 @@ class _FirstScreenState extends State<FirstScreen> {
             ),
             SortBarWidget(),
             isLoading
-                ? Expanded(child: Center(child: CircularProgressIndicator()))
+                ? const Expanded(
+                    child: Center(child: CircularProgressIndicator()))
                 : reagentData.reagents.isEmpty
                     ? Expanded(
                         child: Center(
@@ -120,7 +135,6 @@ class _FirstScreenState extends State<FirstScreen> {
                                     },
                                     onLongPress: () {
                                       setState(() {
-                                        print(reagentData.reagents[index].id);
                                         selectedIndex = index;
                                       });
                                       showDialog(

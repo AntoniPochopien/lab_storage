@@ -10,7 +10,7 @@ class ReagentProvider extends ChangeNotifier {
   List<ReagentModel> reagents = [];
 
   List<Measurement> measurement = [
-    Measurement(0, 'Mg'),
+    Measurement(0, 'mg'),
     Measurement(1, 'g'),
     Measurement(2, 'kg'),
     Measurement(3, 'ml'),
