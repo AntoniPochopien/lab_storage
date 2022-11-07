@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/reagent_provider.dart';
+import '../providers/archives_provider.dart';
 import '../models/reagent_model.dart';
+import '../models/archives_model.dart';
 
 class IssueReagentDialogWidget extends StatefulWidget {
   ReagentModel item;
@@ -108,6 +110,7 @@ class _IssueReagentDialogWidgetState extends State<IssueReagentDialogWidget> {
   @override
   Widget build(BuildContext context) {
     final reagentData = Provider.of<ReagentProvider>(context);
+    final archivesData = Provider.of<ArchivesProvider>(context);
     final screenSize = MediaQuery.of(context).size;
     return Dialog(
       child: Column(
@@ -277,6 +280,13 @@ class _IssueReagentDialogWidgetState extends State<IssueReagentDialogWidget> {
                                           .name);
                                   reagentData.updateReagents(
                                       widget.item.id, widget.item);
+                                  archivesData.addToArchive(
+                                    ArchivesModel(
+                                      widget.item.reagentName,
+                                      'Wydano ${massController.text} ${reagentData.measurement[measurementDropdownController!].name} odczynnika',
+                                      DateTime.now(),
+                                    ),
+                                  );
                                   Navigator.pop(context);
                                 } else {
                                   showDialog(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab_storage/providers/reagent_provider.dart';
-import 'package:lab_storage/providers/users_provider.dart';
+import './providers/reagent_provider.dart';
+import './providers/users_provider.dart';
+import './providers/archives_provider.dart';
 import 'package:provider/provider.dart';
 
 import './screens/tabs_screen.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => UsersProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ArchivesProvider(),
         )
       ],
       child: MaterialApp(

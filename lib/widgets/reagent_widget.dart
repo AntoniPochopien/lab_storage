@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/reagent_provider.dart';
+import '../providers/archives_provider.dart';
+import '../models/archives_model.dart';
 import '../widgets/issue_reagent_dialog_widget.dart';
 
 class ReagentWidget extends StatefulWidget {
@@ -68,6 +70,7 @@ class _ReagentWidgetState extends State<ReagentWidget> {
   @override
   Widget build(BuildContext context) {
     final reagentData = Provider.of<ReagentProvider>(context);
+    final archivesData = Provider.of<ArchivesProvider>(context);
     return Container(
       child: Card(
           shape: RoundedRectangleBorder(
@@ -125,6 +128,13 @@ class _ReagentWidgetState extends State<ReagentWidget> {
                       padding: const EdgeInsets.all(8.0),
                       child: RawMaterialButton(
                         onPressed: () {
+                          archivesData.addToArchive(
+                            ArchivesModel(
+                              widget.reagentName,
+                              'Usunięto odczynnik',
+                              DateTime.now(),
+                            ),
+                          );
                           reagentData.deleteReagent(widget.id);
                         },
                         child: Text('X',

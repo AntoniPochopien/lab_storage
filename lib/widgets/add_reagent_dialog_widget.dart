@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lab_storage/models/archives_model.dart';
+import 'package:lab_storage/providers/archives_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/reagent_model.dart';
@@ -141,6 +143,7 @@ class _addReagentDialogState extends State<addReagentDialog> {
   Widget build(BuildContext context) {
     final userData = Provider.of<UsersProvider>(context);
     final reagentData = Provider.of<ReagentProvider>(context);
+    final archivesData = Provider.of<ArchivesProvider>(context);
     final screenSize = MediaQuery.of(context).size;
     return Dialog(
       child: Column(
@@ -407,6 +410,13 @@ class _addReagentDialogState extends State<addReagentDialog> {
                                               .name,
                                           comment: commentController.text,
                                         ));
+                                    archivesData.addToArchive(
+                                      ArchivesModel(
+                                        reagentNameController.text,
+                                        'Edytowano ten odczynnik',
+                                        DateTime.now(),
+                                      ),
+                                    );
                                     Navigator.of(context).pop();
                                   }
                                 });
@@ -432,6 +442,13 @@ class _addReagentDialogState extends State<addReagentDialog> {
                                       .users[nameDropdownController!].name,
                                   comment: commentController.text,
                                 ));
+                                archivesData.addToArchive(
+                                  ArchivesModel(
+                                    reagentNameController.text,
+                                    'Ddodano nowy oczynnik',
+                                    DateTime.now(),
+                                  ),
+                                );
                                 Navigator.of(context).pop();
                               }
                             }
