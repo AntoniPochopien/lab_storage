@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/issue_reagent_dialog_widget.dart';
 import '../widgets/reagent_widget.dart';
-import '../widgets/sort_bar_widget.dart';
+import '../widgets/sort_bar_reagents_widget.dart';
 import '../widgets/add_reagent_dialog_widget.dart';
 import '../providers/reagent_provider.dart';
 

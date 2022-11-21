@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/sort_bar_archives_widget.dart';
 import '../providers/archives_provider.dart';
 import '../widgets/archives_widget.dart';
 
@@ -39,11 +40,10 @@ class _SecondScreenState extends State<SecondScreen> {
               fontSize: 24,
               color: Colors.grey[800]),
         ),
-        Container(
-          color: Colors.blue,
-          width: double.infinity,
-          child: Text('sort bar'),
+        SizedBox(
+          height: 40,
         ),
+        SortBarArchivesWidget(),
         data.archives.length == 0
             ? Expanded(
                 child: Center(
@@ -56,13 +56,10 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ))
             : Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32),
-                  child: ListView.builder(
-                      itemCount: data.archives.length,
-                      itemBuilder: (context, index) =>
-                          ArchivesWidget(data.archives[index])),
-                ),
+                child: ListView.builder(
+                    itemCount: data.archives.length,
+                    itemBuilder: (context, index) =>
+                        ArchivesWidget(data.archives[index])),
               )
       ]),
     );

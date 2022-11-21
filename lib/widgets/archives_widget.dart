@@ -15,9 +15,15 @@ class ArchivesWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(item.name),
-          Text(item.action),
-          Text(DateFormat("dd.MM.yyyy").format(item.date)),
+          Expanded(
+              child: Text(
+            item.name,
+            textAlign: TextAlign.center,
+          )),
+          Expanded(child: Text(item.action, textAlign: TextAlign.center)),
+          Expanded(
+              child: Text(DateFormat("dd.MM.yyyy").format(item.date),
+                  textAlign: TextAlign.center)),
         ]),
       ),
     );

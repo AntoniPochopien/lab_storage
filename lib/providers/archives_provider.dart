@@ -9,7 +9,7 @@ class ArchivesProvider extends ChangeNotifier {
   List<ArchivesModel> archives = [];
 
   void addToArchive(ArchivesModel item) {
-    archives.add(item);
+    archives.insert(0, item);
     notifyListeners();
     encodeToArchivesJSON();
   }
@@ -67,5 +67,30 @@ class ArchivesProvider extends ChangeNotifier {
       print('blad');
       return;
     }
+  }
+
+  void sortItems(int i, bool reversed) {
+    switch (i) {
+      case 0:
+        {
+          archives.sort((a, b) =>
+              reversed ? b.name.compareTo(a.name) : a.name.compareTo(b.name));
+        }
+        break;
+      case 1:
+        {
+          archives.sort((a, b) => reversed
+              ? b.action.compareTo(a.action)
+              : a.action.compareTo(b.action));
+        }
+        break;
+      case 2:
+        {
+          archives.sort((a, b) =>
+              reversed ? b.date.compareTo(a.date) : a.date.compareTo(b.date));
+        }
+        break;
+    }
+    notifyListeners();
   }
 }
